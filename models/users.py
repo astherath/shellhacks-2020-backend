@@ -12,6 +12,7 @@ class register_form_output(BaseModel):
 class ticket_form_output(BaseModel):
     lat: float
     lng: float
+    order_id: str
 
 class AutoName(Enum):
     def _generate_next_value_(name, start, count, last_values):
