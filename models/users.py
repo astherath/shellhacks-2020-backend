@@ -69,7 +69,7 @@ class StatusEnum(AutoName):
 class ticket_form_input(BaseModel):
     destinationAddress: str
     orderNumber: str #from store confirmation email or smth
-    author: str
+    author: str # user id
     phone: str
     expireAt: datetime
 

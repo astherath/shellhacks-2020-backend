@@ -19,12 +19,16 @@ async def register_user(form, db):
 
 async def create_ticket(form, db):
     column = db["carecart"]["tickets"]
+    user_column = db["carecart"]["users"]
     ticket = models.FullTicketInfo(form,
                                 _id=uuid.uuid4(),
                                 created=datetime.now(),
                                 status=models.StatusEnum.CREATED,
                                 volunteer=None)
     (lat, lng) = ticket.check_address(ticket.address)
+    user = user_column.find_one({'_id': ticket.author})
+    user.active_order = ticket._id
+    user_column.insert_one(user.dict())
     column.insert_one(ticket.dict)
     return models.ticket_form_output(lat=lat,lng=lng,order_id=ticket._id)
     
