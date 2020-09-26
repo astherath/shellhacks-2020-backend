@@ -1,2 +1,4 @@
 dev.sh
 fpush.sh
+.vscode
+.mypy_cache

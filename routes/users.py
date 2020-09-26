@@ -16,7 +16,7 @@ router = APIRouter()
 # set local tag for docs
 DOC_TAG = "User Operations"
 
-# takes in UserInDB object from body and returns a token if registration successful
+# takes in register_form_input object from body and returns a token if registration successful
 @router.post(
     "/users/register",
     response_model=models.register_form_output,
@@ -30,4 +30,53 @@ async def register(form: models.register_form_input):
     # unpack dict
     db = await get_database()
     response = await util.register_user(form, db)
+    return response
+
+# takes in login_form object from body and returns a token if login successful
+@router.post(
+    "/users/login",
+    response_model=models.login_form,
+    tags=[DOC_TAG],
+    description=docs.login_description,
+    summary=docs.login_summary,
+    status_code=201,
+)
+async def login(form: models.login_form):
+    #TODO: Fix login
+    logging.info(f"starting user login with data: {form}")
+    # unpack dict
+    db = await get_database()
+    #response = await util.register_user(form, db)
+    return None
+
+# takes in ticket_form_input object from body and returns a token if ticket creation was successful
+@router.post(
+    "/users/create_ticket",
+    response_model=models.ticket_form_input,
+    tags=[DOC_TAG],
+    description=docs.create_ticket_description,
+    summary=docs.create_ticket_summary,
+    status_code=201,
+)
+async def create_ticket(form: models.ticket_form_input):
+    logging.info(f"starting ticket creation with data: {form}")
+    # unpack dict
+    db = await get_database()
+    response = await util.create_ticket(form, db)
+    return response
+
+# takes in cancel_ticket_request object from body and returns a token if ticket cancellation was successful
+@router.post(
+    "/users/create_ticket",
+    response_model=models.cancel_ticket_request,
+    tags=[DOC_TAG],
+    description=docs.cancel_ticket_description,
+    summary=docs.cancel_ticket_summary,
+    status_code=201,
+)
+async def cancel_ticket(form: models.cancel_ticket_request):
+    logging.info(f"starting ticket cancellation with data: {form}")
+    # unpack dict
+    db = await get_database()
+    response = await util.cancel_ticket(form, db)
     return response
