@@ -63,22 +63,25 @@ async def login_user(form, db):
 
 async def create_ticket(form, db):
     column = db["carecart"]["tickets"]
+    user_column = db["carecart"]["users"]
     ticket = models.FullTicketInfo(
-        form,
-        _id=str(uuid.uuid4()),
+        **form.dict(),
         created=datetime.now(),
         status=models.StatusEnum.CREATED,
         volunteer=None,
     )
-    (lat, lng) = check_address(ticket.address)
-
+    (lat, lng) = await check_address(ticket.destinationAddress)
+    order_id = str(uuid.uuid4())
+    order_dict = ticket.dict()
+    order_dict["_id"] = order_id
     # set author's active order
-    user = user_column.find_one({"_id": ticket.author})
-    user.active_order = ticket._id
-    user_column.insert_one(user.dict())
+    user = await find_user({"_id": ticket.author}, db)
+    print(user)
+    user["active_order"] = order_dict["_id"]
+    #user_column.update(user)
 
-    column.insert_one(ticket.dict)
-    return models.ticket_form_output(lat=lat, lng=lng, order_id=ticket._id)
+    column.insert_one(order_dict)
+    return models.ticket_form_output(lat=lat, lng=lng, order_id=order_dict["_id"])
 
 
 async def cancel_ticket(form, db):
