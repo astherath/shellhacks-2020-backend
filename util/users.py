@@ -39,6 +39,11 @@ async def find_user(query, db):
     column = db["carecart"]["users"]
     try:
         document = column.find_one(query)
+        if not document:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found",
+            )
         return document
     except:
         raise Exception("Database exception")
@@ -47,11 +52,6 @@ async def find_user(query, db):
 async def login_user(form, db):
     query = {"email": form.email}
     document = await find_user(query, db)
-    if not document:
-        raise HTTPException(
-            status_code=404,
-            detail="User not found",
-        )
     match = models.FullUserData(**document).check_password(form.password)
     if not match:
         raise HTTPException(
@@ -83,3 +83,53 @@ async def create_ticket(form, db):
 
 async def cancel_ticket(form, db):
     return 0
+
+
+async def find_ticket(query, db):
+    column = db["carecart"]["tickets"]
+    try:
+        document = column.find_one(query)
+        if not document:
+            raise HTTPException(
+                status_code=404,
+                detail="Ticket not found",
+            )
+        return document
+    except:
+        raise Exception("Database exception")
+
+
+async def update_ticket(query, updated_ticket):
+    column = db["carecart"]["tickets"]
+    try:
+        column.update(query, updated_ticket)
+    except:
+        raise Exception("Database exception")
+
+
+async def update_user(query, updated_user):
+    column = db["carecart"]["users"]
+    try:
+        column.update(query, updated_user)
+    except:
+        raise Exception("Database exception")
+
+
+async def accept_ticket(ticket_id, email, db):
+    user_query = {"email": email}
+    document = await find_user(user_query, db)
+
+    ticket_query = {"_id": ticket_id}
+    ticket = await find_ticket(ticket_query, db)
+
+    ticket["status"] = models.StatusEnum.ACCEPTED
+    await update_ticket(ticket_query, ticket)
+
+    document["active_order"] = ticket_id
+    await update_user(user_query, document)
+
+
+# TODO: for use in close ticket method
+#  document["orders_completed"].append(ticket_id)
+#  document["trips"] += 1
+#  document["hours"] += 1
