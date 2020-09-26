@@ -64,3 +64,19 @@ async def create_ticket(form: models.ticket_form_input):
     db = await get_database()
     response = await util.create_ticket(form, db)
     return response
+
+# takes in cancel_ticket_request object from body and returns a token if ticket cancellation was successful
+@router.post(
+    "/users/create_ticket",
+    response_model=models.cancel_ticket_request,
+    tags=[DOC_TAG],
+    description=docs.cancel_ticket_description,
+    summary=docs.cancel_ticket_summary,
+    status_code=201,
+)
+async def cancel_ticket(form: models.cancel_ticket_request):
+    logging.info(f"starting ticket cancellation with data: {form}")
+    # unpack dict
+    db = await get_database()
+    response = await util.cancel_ticket(form, db)
+    return response

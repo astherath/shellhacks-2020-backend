@@ -89,3 +89,6 @@ class FullTicketInfo(ticket_form_input):
                     )
         return (location.latitude, location.longitude)
 
+class cancel_ticket_request(BaseModel):
+    order_id: str
+    author_id: str
