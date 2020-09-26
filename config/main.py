@@ -1,4 +1,5 @@
 import os
+import geopy
 
 SECRET_KEY = os.environ["SHELLHACKS_SECRET_KEY"]
 ALGORITHM = "HS256"
@@ -30,3 +31,5 @@ ALLOWED_HEADERS = ["*", "x-requested-with"]
 API_TITLE = "API Gateway"
 API_VERSION = "v.1.0"
 API_DESCRIPTION = "HTTP1 REST API Gateway"
+
+AGENT = geopy.Nominatim(user_agent="default")
