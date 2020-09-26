@@ -1,5 +1,8 @@
 import os
 
+SECRET_KEY = os.environ["SHELLHACKS_SECRET_KEY"]
+ALGORITHM = "HS256"
+
 DB_URI = os.environ["SHELLHACKS_MONGO_URI"]
 
 ALLOWED_ORIGINS = [
