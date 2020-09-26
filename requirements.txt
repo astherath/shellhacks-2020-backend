@@ -4,4 +4,4 @@ pydantic
 pymongo
 gunicorn
 dnspython
-pip install pydantic[email]
+pydantic[email]
