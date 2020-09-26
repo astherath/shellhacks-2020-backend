@@ -56,7 +56,7 @@ async def login(form: models.login_form):
 # takes in ticket_form_input object from body and returns a token if ticket creation was successful
 @router.post(
     "/users/create_ticket",
-    response_model=models.ticket_form_input,
+    response_model=models.ticket_form_output,
     tags=[DOC_TAG],
     description=docs.create_ticket_description,
     summary=docs.create_ticket_summary,

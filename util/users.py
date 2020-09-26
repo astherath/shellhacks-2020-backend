@@ -63,7 +63,6 @@ async def login_user(form, db):
 
 async def create_ticket(form, db):
     column = db["carecart"]["tickets"]
-    user_column = db["carecart"]["users"]
     ticket = models.FullTicketInfo(
         **form.dict(),
         created=datetime.now(),
@@ -74,11 +73,12 @@ async def create_ticket(form, db):
     order_id = str(uuid.uuid4())
     order_dict = ticket.dict()
     order_dict["_id"] = order_id
+    order_dict["status"] = models.StatusEnum.CREATED.value
     # set author's active order
     user = await find_user({"_id": ticket.author}, db)
     print(user)
     user["active_order"] = order_dict["_id"]
-    # user_column.update(user)
+    await update_user({"_id": order_dict["author"]}, user, db)
 
     column.insert_one(order_dict)
     return models.ticket_form_output(lat=lat, lng=lng, order_id=order_dict["_id"])
@@ -110,7 +110,7 @@ async def update_ticket(query, updated_ticket):
         raise Exception("Database exception")
 
 
-async def update_user(query, updated_user):
+async def update_user(query, updated_user, db):
     column = db["carecart"]["users"]
     try:
         column.update(query, updated_user)
