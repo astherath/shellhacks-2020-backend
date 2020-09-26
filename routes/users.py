@@ -101,3 +101,19 @@ async def accept_ticket(ticket: str, header: str = Depends(auth.get_token_from_h
     # unpack dict
     db = await get_database()
     await util.accept_ticket(ticket, payload, db)
+
+
+@router.get(
+    "/users/close_ticket",
+    tags=[DOC_TAG],
+    description=docs.close_ticket_desc,
+    summary=docs.close_ticket_summ,
+    status_code=204,
+)
+async def accept_ticket(ticket: str, header: str = Depends(auth.get_token_from_header)):
+    logging.info(f"starting ticket acceptance with data: {ticket}, {header}")
+    # check credentials
+    payload = await auth.decode(header)
+    # unpack dict
+    db = await get_database()
+    await util.close_ticket(ticket, payload, db)

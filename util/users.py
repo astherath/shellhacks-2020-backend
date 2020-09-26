@@ -67,7 +67,7 @@ async def create_ticket(form, db):
     ticket = models.FullTicketInfo(
         **form.dict(),
         created=datetime.now(),
-        status=models.StatusEnum.CREATED,
+        status=models.StatusEnum.CREATED.value,
         volunteer=None,
     )
     (lat, lng) = await check_address(ticket.destinationAddress)
@@ -78,7 +78,7 @@ async def create_ticket(form, db):
     user = await find_user({"_id": ticket.author}, db)
     print(user)
     user["active_order"] = order_dict["_id"]
-    #user_column.update(user)
+    # user_column.update(user)
 
     column.insert_one(order_dict)
     return models.ticket_form_output(lat=lat, lng=lng, order_id=order_dict["_id"])
@@ -125,14 +125,25 @@ async def accept_ticket(ticket_id, email, db):
     ticket_query = {"_id": ticket_id}
     ticket = await find_ticket(ticket_query, db)
 
-    ticket["status"] = models.StatusEnum.ACCEPTED
+    ticket["status"] = models.StatusEnum.ACCEPTED.value
     await update_ticket(ticket_query, ticket)
 
     document["active_order"] = ticket_id
     await update_user(user_query, document)
 
 
-# TODO: for use in close ticket method
-#  document["orders_completed"].append(ticket_id)
-#  document["trips"] += 1
-#  document["hours"] += 1
+async def accept_ticket(ticket_id, email, db):
+    user_query = {"email": email}
+    document = await find_user(user_query, db)
+
+    ticket_query = {"_id": ticket_id}
+    ticket = await find_ticket(ticket_query, db)
+
+    ticket["status"] = models.StatusEnum.COMPLETED.value
+    await update_ticket(ticket_query, ticket)
+
+    document["orders_completed"].append(ticket_id)
+    document["trips"] += 1
+    document["hours"] += 1
+    document["active_order"] = None
+    await update_user(user_query, document)
