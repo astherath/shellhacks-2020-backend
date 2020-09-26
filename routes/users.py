@@ -110,7 +110,7 @@ async def accept_ticket(ticket: str, header: str = Depends(auth.get_token_from_h
     summary=docs.close_ticket_summ,
     status_code=204,
 )
-async def accept_ticket(ticket: str, header: str = Depends(auth.get_token_from_header)):
+async def close_ticket(ticket: str, header: str = Depends(auth.get_token_from_header)):
     logging.info(f"starting ticket acceptance with data: {ticket}, {header}")
     # check credentials
     payload = await auth.decode(header)

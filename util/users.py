@@ -39,14 +39,14 @@ async def find_user(query, db):
     column = db["carecart"]["users"]
     try:
         document = column.find_one(query)
-        if not document:
-            raise HTTPException(
-                status_code=404,
-                detail="User not found",
-            )
-        return document
-    except:
-        raise Exception("Database exception")
+    except Exception as e:
+        raise Exception(f"Database exception: {e}")
+    if not document:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found",
+        )
+    return document
 
 
 async def login_user(form, db):
@@ -92,14 +92,14 @@ async def find_ticket(query, db):
     column = db["carecart"]["tickets"]
     try:
         document = column.find_one(query)
-        if not document:
-            raise HTTPException(
-                status_code=404,
-                detail="Ticket not found",
-            )
-        return document
     except:
         raise Exception("Database exception")
+    if not document:
+        raise HTTPException(
+            status_code=404,
+            detail="Ticket not found",
+        )
+    return document
 
 
 async def update_ticket(query, updated_ticket):
@@ -132,7 +132,7 @@ async def accept_ticket(ticket_id, email, db):
     await update_user(user_query, document)
 
 
-async def accept_ticket(ticket_id, email, db):
+async def close_ticket(ticket_id, email, db):
     user_query = {"email": email}
     document = await find_user(user_query, db)
 

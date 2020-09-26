@@ -17,10 +17,8 @@ async def create_access_token(data):
 async def decode(token):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    except PyJWTError:
-        raise HTTPException(
-            status_code=HTTP_403_FORBIDDEN, detail="Could not validate credentials"
-        )
+    except PyJWTError as e:
+        raise HTTPException(status_code=403, detail="Could not validate credentials")
     return payload
 
 
@@ -29,7 +27,7 @@ async def get_token_from_header(authorization: str = Header(None)):
         assert authorization
     except:
         raise HTTPException(
-            status_code=HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=422,
             detail={"error": "Bad authentication header"},
         )
     return authorization
