@@ -8,8 +8,7 @@ from datetime import datetime
 async def register_user(form, db):
     column = db["carecart"]["users"]
     user = models.FullUserData(
-        form,
-        _id=str(uuid.uuid4()),
+        **form.dict(),
         points=0,
         trips=0,
         hours=0.0,
@@ -17,8 +16,11 @@ async def register_user(form, db):
         orders_completed=[],
     )
     user.change_password(user.password)
-    column.insert_one(user.dict())
-    return user._id
+    user_dict = user.dict()
+    user_id = str(uuid.uuid4())
+    user_dict["_id"] = user_id
+    column.insert_one(user_dict)
+    return user_id
 
 
 async def create_ticket(form, db):
