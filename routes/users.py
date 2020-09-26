@@ -72,7 +72,7 @@ async def create_ticket(form: models.ticket_form_input):
 
 # takes in cancel_ticket_request object from body and returns a token if ticket cancellation was successful
 @router.post(
-    "/users/create_ticket",
+    "/users/cancel_ticket",
     response_model=models.cancel_ticket_request,
     tags=[DOC_TAG],
     description=docs.cancel_ticket_description,
