@@ -11,3 +11,11 @@ User login
 """
 
 login_summary = login_description
+
+create_ticket_description = """
+Creates a ticket and puts in database
+"""
+
+create_ticket_summary = """
+Create Ticket
+"""

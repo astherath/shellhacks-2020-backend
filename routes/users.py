@@ -47,4 +47,20 @@ async def login(form: models.login_form):
     # unpack dict
     db = await get_database()
     #response = await util.register_user(form, db)
-    return form
+    return None
+
+# takes in ticket_form_input object from body and returns a token if ticket creation was successful
+@router.post(
+    "/users/create_ticket",
+    response_model=models.ticket_form_input,
+    tags=[DOC_TAG],
+    description=docs.create_ticket_description,
+    summary=docs.create_ticket_summary,
+    status_code=201,
+)
+async def create_ticket(form: models.ticket_form_input):
+    logging.info(f"starting ticket creation with data: {form}")
+    # unpack dict
+    db = await get_database()
+    response = await util.create_ticket(form, db)
+    return response

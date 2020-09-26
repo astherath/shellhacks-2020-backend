@@ -5,3 +5,4 @@ pydantic[email]
 pymongo
 gunicorn
 dnspython
+geopy

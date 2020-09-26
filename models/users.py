@@ -1,12 +1,17 @@
 import bcrypt
+import geopy
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from enum import Enum, auto
-from typing import Optional
+from typing import Optional, List
 from starlette.exceptions import HTTPException
 
 class register_form_output(BaseModel):
     success: bool
+
+class ticket_form_output(BaseModel):
+    lat: float
+    lng: float
 
 class AutoName(Enum):
     def _generate_next_value_(name, start, count, last_values):
@@ -17,13 +22,6 @@ class TransportEnum(AutoName):
     BIKE = auto()
     FOOT = auto()
 
-class StatusEnum(AutoName):
-    CREATED = auto()
-    ACCEPTED = auto()
-    PICKED_UP = auto()
-    INVALID = auto()
-    COMPLETED = auto()
-
 class register_form_input(BaseModel):
     email: EmailStr
     password: str
@@ -32,13 +30,15 @@ class register_form_input(BaseModel):
     age: int
     address: str
     volunteer: bool
-    transport: TransportEnum
+    transport: Optional[TransportEnum]
 
 class FullUserData(register_form_input):
     _id: str
     points: int
     trips: int
     hours: float
+    active_order: Optional[str]
+    orders_completed: List[str]
 
     def change_password(self, new_password: str):
         try:
@@ -58,13 +58,33 @@ class login_form(BaseModel):
     email: str
     password: str
 
+class StatusEnum(AutoName):
+    CREATED = auto()
+    ACCEPTED = auto()
+    PICKED_UP = auto()
+    INVALID = auto()
+    COMPLETED = auto()
+
 class ticket_form_input(BaseModel):
-    created: datetime
     destinationAddress: str
-    orderNumber: str
+    orderNumber: str #from store confirmation email or smth
     author: str
+    phone: str
+    expireAt: datetime
+
+class FullTicketInfo(ticket_form_input):
+    _id: str
+    created: datetime
     status: StatusEnum
     volunteer: Optional[str]
-    contactInfo: str
-    expireAt: datetime
+
+    def check_address(self, address):
+        agent = geopy.Nominatim(user_agent="default")
+        location = agent.geocode(address)
+        if location is None:
+            raise HTTPException(
+                    status_code=422,
+                    detail="Address could not be verified"
+                    )
+        return (location.latitude, location.longitude)
 
