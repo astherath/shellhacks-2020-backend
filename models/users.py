@@ -54,6 +54,9 @@ class FullUserData(register_form_input):
         match = bcrypt.checkpw(pwd.encode('utf-8'), self.password.encode('utf-8'))
         return match
 
+class login_form(BaseModel):
+    email: str
+    password: str
 
 class ticket_form_input(BaseModel):
     created: datetime
