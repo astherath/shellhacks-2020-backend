@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from config.db import connect_to_mongo, close_connection_to_mongo
 
 from starlette.middleware.cors import CORSMiddleware
 
@@ -56,3 +57,6 @@ app.include_router(users_router)
 
 # add schema for docs
 app.openapi = custom_schema
+
+app.add_event_handler("startup", connect_to_mongo)
+app.add_event_handler("shutdown", close_connection_to_mongo)
