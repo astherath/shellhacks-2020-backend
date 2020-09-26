@@ -41,7 +41,6 @@ class register_form_input(BaseModel):
 
 class FullUserData(register_form_input):
     points: int
-    _id: Optional[str]
     trips: int
     hours: float
     active_order: Optional[str]

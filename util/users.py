@@ -3,6 +3,7 @@ import bcrypt
 import uuid
 import geopy
 from datetime import datetime
+from starlette.exceptions import HTTPException
 
 
 async def register_user(form, db):
@@ -21,6 +22,32 @@ async def register_user(form, db):
     user_dict["_id"] = user_id
     column.insert_one(user_dict)
     return user_id
+
+
+async def find_user(query, db):
+    column = db["carecart"]["users"]
+    try:
+        document = column.find_one(query)
+        return document
+    except:
+        raise Exception("Database exception")
+
+
+async def login_user(form, db):
+    query = {"email": form.email}
+    document = await find_user(query, db)
+    if not document:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found",
+        )
+    match = models.FullUserData(**document).check_password(form.password)
+    if not match:
+        raise HTTPException(
+            status_code=403,
+            detail="Incorrect password",
+        )
+    return form.email
 
 
 async def create_ticket(form, db):

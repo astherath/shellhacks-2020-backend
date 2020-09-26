@@ -38,19 +38,19 @@ async def register(form: models.register_form_input):
 # takes in login_form object from body and returns a token if login successful
 @router.post(
     "/users/login",
-    response_model=models.login_form,
+    response_model=models.register_form_output,
     tags=[DOC_TAG],
     description=docs.login_description,
     summary=docs.login_summary,
     status_code=201,
 )
 async def login(form: models.login_form):
-    # TODO: Fix login
     logging.info(f"starting user login with data: {form}")
     # unpack dict
     db = await get_database()
-    # response = await util.register_user(form, db)
-    return None
+    response = await util.login_user(form, db)
+    token = await auth.create_access_token(response)
+    return models.register_form_output(token=token)
 
 
 # takes in ticket_form_input object from body and returns a token if ticket creation was successful
