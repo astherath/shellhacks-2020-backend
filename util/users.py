@@ -24,8 +24,6 @@ async def register_user(form, db):
         active_order=None,
         orders_completed=[],
     )
-    if user.age < 16:
-        raise HTTPException(status_code=422, detail="Too young!")
     user.change_password(user.password)
     user_dict = user.dict()
     user_id = str(uuid.uuid4())
@@ -147,3 +145,20 @@ async def close_ticket(ticket_id, email, db):
     document["hours"] += 1
     document["active_order"] = None
     await update_user(user_query, document)
+
+async def all_tickets(db):
+    column = db["carecart"]["tickets"]
+    try:
+        documents = column.find({"status": "CREATED"})
+    except:
+        raise Exception("Database exception")
+    if not documents:
+        raise HTTPException(
+            status_code=404,
+            detail="Ticket not found",
+        )
+    tickets = []
+    documents = [x for x in documents]
+    for document in documents:
+        tickets.append(models.FullTicketInfo(**document))
+    return tickets

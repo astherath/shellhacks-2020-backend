@@ -33,7 +33,6 @@ class register_form_input(BaseModel):
     password: str
     first: str
     last: str
-    age: int
     address: str
     volunteer: bool
     transport: Optional[TransportEnum]
@@ -99,3 +98,7 @@ class FullTicketInfo(ticket_form_input):
 class cancel_ticket_request(BaseModel):
     order_id: str
     author_id: str
+
+
+class ticket_list(BaseModel):
+    tickets: List[FullTicketInfo]
