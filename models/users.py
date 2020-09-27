@@ -33,7 +33,7 @@ class register_form_input(BaseModel):
     password: str
     first: str
     last: str
-    age: int
+    age: Optional[int]
     address: str
     volunteer: bool
     transport: Optional[TransportEnum]
