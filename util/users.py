@@ -155,7 +155,7 @@ async def close_ticket(ticket_id, email, db):
 async def all_tickets(db):
     column = db["carecart"]["tickets"]
     try:
-        documents = column.find({"orderNumber": "#312342132"})
+        documents = column.find_one({"orderNumber": "#312342132"})
     except:
         raise Exception("Database exception")
     if not documents:
@@ -163,7 +163,8 @@ async def all_tickets(db):
             status_code=404,
             detail="Ticket not found",
         )
-    tickets = [models.FullTicketInfo(**x) for x in documents]
+    #  tickets = [models.FullTicketInfo(**x) for x in documents]
+    tickets = [models.FullTicketInfo(**documents)]
     #  documents = [x for x in documents]
     #  for document in documents:
     #  tickets.append(models.FullTicketInfo(**document))
