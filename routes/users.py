@@ -130,7 +130,6 @@ async def close_ticket(ticket: str, header: str = Depends(auth.get_token_from_he
 async def all_tickets():
     logging.info(f"starting get all tickets")
     # check credentials
-    payload = await auth.decode(header)
     # unpack dict
     db = await get_database()
     tickets = await util.all_tickets(db)
