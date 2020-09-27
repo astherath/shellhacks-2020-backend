@@ -127,7 +127,7 @@ async def close_ticket(ticket: str, header: str = Depends(auth.get_token_from_he
     summary=docs.all_tickets_summ,
     status_code=201,
 )
-async def all_tickets(header: str = Depends(auth.get_token_from_header)):
+async def all_tickets():
     logging.info(f"starting get all tickets")
     # check credentials
     payload = await auth.decode(header)
