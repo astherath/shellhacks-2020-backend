@@ -100,7 +100,7 @@ async def accept_ticket(ticket: str, header: str = Depends(auth.get_token_from_h
     payload = await auth.decode(header)
     # unpack dict
     db = await get_database()
-    await util.accept_ticket(ticket, payload, db)
+    await util.accept_ticket(ticket, payload["data"], db)
 
 
 @router.get(
@@ -116,4 +116,4 @@ async def close_ticket(ticket: str, header: str = Depends(auth.get_token_from_he
     payload = await auth.decode(header)
     # unpack dict
     db = await get_database()
-    await util.close_ticket(ticket, payload, db)
+    await util.close_ticket(ticket, payload["data"], db)
