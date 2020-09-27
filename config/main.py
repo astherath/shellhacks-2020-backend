@@ -21,6 +21,8 @@ ALLOWED_ORIGINS = [
 ALLOWED_HOSTS = [
     "shellhacks-2020.herokuapp.com",
     "www.shellhacks-2020.herokuapp.com",
+    "52.150.19.14:8080",
+    "52.150.19.14",
     "http://localhost:3000",
     "http://localhost",
     "http://localhost",
