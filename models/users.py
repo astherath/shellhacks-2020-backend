@@ -47,11 +47,11 @@ class FullUserData(register_form_input):
 
     def change_password(self, new_password: str):
         try:
-            assert len(new_password) >= 8
+            assert len(new_password) >= 6
         except:
             raise HTTPException(
                 status_code=422,
-                detail="Password does not meet minimum length requirement (length >= 10)",
+                detail="Password does not meet minimum length requirement (length >= 6)",
             )
         self.password = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt())
 
