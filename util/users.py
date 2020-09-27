@@ -100,7 +100,7 @@ async def find_ticket(query, db):
     return document
 
 
-async def update_ticket(query, updated_ticket):
+async def update_ticket(query, updated_ticket, db):
     column = db["carecart"]["tickets"]
     try:
         column.update(query, updated_ticket)
@@ -124,10 +124,10 @@ async def accept_ticket(ticket_id, email, db):
     ticket = await find_ticket(ticket_query, db)
 
     ticket["status"] = models.StatusEnum.ACCEPTED.value
-    await update_ticket(ticket_query, ticket)
+    await update_ticket(ticket_query, ticket, db)
 
     document["active_order"] = ticket_id
-    await update_user(user_query, document)
+    await update_user(user_query, document, db)
 
 
 async def close_ticket(ticket_id, email, db):
@@ -138,13 +138,14 @@ async def close_ticket(ticket_id, email, db):
     ticket = await find_ticket(ticket_query, db)
 
     ticket["status"] = models.StatusEnum.COMPLETED.value
-    await update_ticket(ticket_query, ticket)
+    await update_ticket(ticket_query, ticket, db)
 
     document["orders_completed"].append(ticket_id)
     document["trips"] += 1
     document["hours"] += 1
     document["active_order"] = None
-    await update_user(user_query, document)
+    await update_user(user_query, document, db)
+
 
 async def all_tickets(db):
     column = db["carecart"]["tickets"]
