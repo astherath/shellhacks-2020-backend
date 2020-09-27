@@ -117,3 +117,21 @@ async def close_ticket(ticket: str, header: str = Depends(auth.get_token_from_he
     # unpack dict
     db = await get_database()
     await util.close_ticket(ticket, payload["data"], db)
+
+
+@router.get(
+    "/users/all_tickets",
+    response_model=models.ticket_list,
+    tags=[DOC_TAG],
+    description=docs.all_tickets_desc,
+    summary=docs.all_tickets_summ,
+    status_code=201,
+)
+async def all_tickets(header: str = Depends(auth.get_token_from_header)):
+    logging.info(f"starting get all tickets")
+    # check credentials
+    payload = await auth.decode(header)
+    # unpack dict
+    db = await get_database()
+    tickets = await util.all_tickets(db)
+    return models.ticket_list(tickets=tickets)

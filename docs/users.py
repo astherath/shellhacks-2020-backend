@@ -43,3 +43,11 @@ Changes the status of the ticket in the database to closed and adds one to the t
 close_ticket_summ = """
 Close an accepted ticket
 """
+
+all_tickets_desc = """
+Get list of all tickets (in an area)
+"""
+
+all_tickets_summ = """
+Get all tickets
+"""
