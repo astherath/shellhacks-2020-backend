@@ -155,7 +155,7 @@ async def close_ticket(ticket_id, email, db):
 async def all_tickets(db):
     column = db["carecart"]["tickets"]
     try:
-        documents = column.find({"status": "CREATED"})
+        documents = column.find({"orderNumber": "#312342132"})
     except:
         raise Exception("Database exception")
     if not documents:
