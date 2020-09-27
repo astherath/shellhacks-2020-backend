@@ -24,8 +24,6 @@ async def register_user(form, db):
         active_order=None,
         orders_completed=[],
     )
-    if user.age < 16:
-        raise HTTPException(status_code=422, detail="Too young!")
     user.change_password(user.password)
     user_dict = user.dict()
     user_id = str(uuid.uuid4())
