@@ -9,6 +9,7 @@ from starlette.exceptions import HTTPException
 
 class register_form_output(BaseModel):
     token: str
+    user_id: str
 
 
 class ticket_form_output(BaseModel):
@@ -78,21 +79,15 @@ class ticket_form_input(BaseModel):
     orderNumber: str  # from store confirmation email or smth
     author: str
     phone: str
-    expireAt: datetime
+    expireAt: Optional[datetime] = datetime.now()
 
 
 class FullTicketInfo(ticket_form_input):
-    _id: str
     created: datetime
     status: StatusEnum
     volunteer: Optional[str]
-
-    def check_address(self, address):
-        agent = geopy.Nominatim(user_agent="default")
-        location = agent.geocode(address)
-        if location is None:
-            raise HTTPException(status_code=422, detail="Address could not be verified")
-        return (location.latitude, location.longitude)
+    latitude: float
+    longitude: float
 
 
 class cancel_ticket_request(BaseModel):

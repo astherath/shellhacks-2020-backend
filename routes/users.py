@@ -32,7 +32,7 @@ async def register(form: models.register_form_input):
     user_id = await util.register_user(form, db)
     # make token to return
     token = await auth.create_access_token(user_id)
-    return models.register_form_output(token=token)
+    return models.register_form_output(token=token, user_id=user_id)
 
 
 # takes in login_form object from body and returns a token if login successful
