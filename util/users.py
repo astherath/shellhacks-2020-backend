@@ -164,6 +164,7 @@ async def all_tickets(db):
             detail="Ticket not found",
         )
     #  tickets = [models.FullTicketInfo(**x) for x in documents]
+    documents["ticket_id"] = documents["_id"]
     tickets = [models.FullTicketInfo(**documents)]
     #  documents = [x for x in documents]
     #  for document in documents:

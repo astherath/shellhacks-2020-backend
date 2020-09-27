@@ -88,6 +88,7 @@ class FullTicketInfo(ticket_form_input):
     volunteer: Optional[str]
     latitude: float
     longitude: float
+    ticket_id: str
 
 
 class cancel_ticket_request(BaseModel):
