@@ -7,13 +7,13 @@ ALGORITHM = "HS256"
 DB_URI = os.environ["SHELLHACKS_MONGO_URI"]
 
 ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8080",
     "http://127.0.0.1:*",
     "http://127.0.0.1",
     "127.0.0.1",
-    "http://localhost:3000",
+    "http://localhost:8080",
     "http://localhost:*",
-    "localhost:3000",
+    "localhost:8080",
     "http://localhost",
     "localhost",
 ]
@@ -24,6 +24,7 @@ ALLOWED_HOSTS = [
     "52.150.19.14:8080",
     "52.150.19.14",
     "http://localhost:3000",
+    "http://localhost:8080",
     "http://localhost",
     "http://localhost",
     "localhost",
